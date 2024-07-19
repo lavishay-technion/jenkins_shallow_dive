@@ -1,0 +1,12 @@
+SDLC
+sdlc
+Schapelle
+Kohsuke
+Kawaguchi
+pylint
+pyinstaller
+Jenkinsfile
+jenkinsfile
+LexLuthor
+Luthor
+yesno

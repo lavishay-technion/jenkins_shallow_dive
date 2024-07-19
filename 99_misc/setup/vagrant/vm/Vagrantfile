@@ -1,0 +1,61 @@
+$scr= <<-SCRIPT
+
+source /etc/os-release
+
+if [ -e /etc/selinux/config ];then
+sed -i s/SELINUX=enforcing/SELINUX=permissive/ /etc/selinux/config
+fi
+
+if [ $ID == 'centos' ] || [ $ID == 'rockylinux'] || [ $ID == 'almalinux' ] && [ $HOSTNAME == 'jenkins-ci' ];then
+	yum install -y epel-release
+	yum install -y java-1.8.0-openjdk-devel curl wget anisble git python3 python3-pip
+	curl --silent --location http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo | sudo tee /etc/yum.repos.d/jenkins.repo
+	yum install -y jenkins
+	systemctl enable jenkins
+	systemctl start jenkins
+elif [ $ID == 'debian'] || [ $ID == 'ubuntu' ]  && [ $HOSTNAME == 'jenkins-ci' ];then
+	apt-get update 
+	apt-get install default-jdk curl wget ansible git python3 python3-pip
+	curl -fsSL https://pkg.jenkins.io/debian/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+	echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]  https://pkg.jenkins.io/debian binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+	sudo apt-get update
+	sudo apt-get install -y fontconfig
+	sudo apt-get install -y jenkins
+else
+		echo not provisioned
+fi
+
+if [ -e /var/lib/jenkins/secrets/initialAdminPassword ];then
+	cat /var/lib/jenkins/secrets/initialAdminPassword 
+fi
+
+useradd jenkins
+
+sed -i s/#PubkeyAuthentication/PubkeyAuthentication/ /etc/ssh/sshd_config
+sed -i s/#PasswordAuthentication/PasswordAuthentication/ /etc/ssh/sshd_config
+sed -i s/PasswordAuthentication\ no/#PasswordAuthentication\ no/ /etc/ssh/sshd_config
+
+systemctl restart sshd
+ 
+wget -O- get.docker.com | bash
+
+SCRIPT
+
+
+Vagrant.configure("2") do |config|
+  config.vm.define "jenkins" do |jenkins|
+		jenkins.vm.box="generic/debian11"
+		jenkins.vm.hostname="jenkins-ci"
+	 	jenkins.vm.network "private_network", ip: "192.168.56.102"
+  	 	jenkins.vm.network "forwarded_port", guest: 8080, host: 80
+    	jenkins.vm.provision "shell", inline: $scr
+	end
+  config.vm.define "j" do |j|
+ 	 j.vm.box="generic/debian11"
+	 j.vm.hostname="jenkins-worker"
+	 j.vm.network "private_network", ip: "192.168.56.103"
+	 j.vm.provision "shell", inline: $scr
+	end
+
+end
+
