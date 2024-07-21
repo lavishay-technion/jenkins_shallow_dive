@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:lts-jdk17
 USER root
 RUN apt-get update && apt-get install -y lsb-release apt-utils vim wget curl\ 
 && TEMP_DEB="$(mktemp)" && wget -O "$TEMP_DEB"  "https://github.com/go-task/task/releases/download/v3.18.0/task_linux_amd64.deb" \
