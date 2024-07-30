@@ -1,6 +1,6 @@
-/* Requires the Docker Pipeline plugin */
+
 pipeline {
-    agent { label workers }
+    agent { Label workers }
     stages {
         stage('build') {
             steps {
