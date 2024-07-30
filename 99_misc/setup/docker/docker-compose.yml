@@ -16,7 +16,7 @@ services:
         hostname: jenkins-worker1
         build:
             context: .
-            dockerfile: Dockerfile.worker
+            dockerfile: Dockerfile.deb.worker
 
         networks:
             - jenkins
@@ -25,7 +25,18 @@ services:
             SSH_USERPASS: jenkins
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock    
+    worker2:
+        hostname: jenkins-worker2
+        build:
+            context: .
+            dockerfile: Dockerfile.rpm.worker
 
+        networks:
+            - jenkins
+        environment:
+            SSH_USERNAME: jenkins
+            SSH_USERPASS: jenkins
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock   
 networks:
-    jenkins: 
-        driver: bridge
+    jenkins:
