@@ -1,6 +1,6 @@
 
 pipeline {
-    { label workers }
+    agent { label workers }
     stages {
         stage('build') {
             steps {
