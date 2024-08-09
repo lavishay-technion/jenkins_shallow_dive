@@ -6,9 +6,20 @@
   <properties>
     <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
       <triggers>
-        <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.40.0">
+        <org.jenkinsci.plugins.gwt.GenericTrigger plugin="generic-webhook-trigger@2.2.2">
           <spec></spec>
-        </com.cloudbees.jenkins.GitHubPushTrigger>
+          <regexpFilterText></regexpFilterText>
+          <regexpFilterExpression></regexpFilterExpression>
+          <printPostContent>false</printPostContent>
+          <printContributedVariables>false</printContributedVariables>
+          <causeString>Generic Cause</causeString>
+          <token>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</token>
+          <tokenCredentialId></tokenCredentialId>
+          <silentResponse>false</silentResponse>
+          <overrideQuietPeriod>false</overrideQuietPeriod>
+          <shouldNotFlattern>false</shouldNotFlattern>
+          <allowSeveralTriggersPerBuild>false</allowSeveralTriggersPerBuild>
+        </org.jenkinsci.plugins.gwt.GenericTrigger>
       </triggers>
     </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
   </properties>
